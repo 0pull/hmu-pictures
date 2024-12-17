@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Случайные картинки</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        button {
+            background-color: purple;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: darkviolet;
+        }
+        img {
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Случайные картинки из Telegram</h1>
+    <button id="randomImageButton">Получить случайную картинку</button>
+    <img id="randomImage" src="" alt="Случайная картинка" style="display:none;">
+
+    <script>
+        document.getElementById('randomImageButton').onclick = async function() {
+            const response = await fetch('https://api.telegram.org/bot7989890906:AAGhTKKfRiNG_HEmyRX8Z6KdMLo0CndS50E/getUpdates');
+            const data = await response.json();
+            const messages = data.result;
+
+            // Фильтруем сообщения, чтобы получить только те, которые содержат фотографии
+            const photos = messages.flatMap(message => message.message?.photo || []);
+            if (photos.length > 0) {
+                const randomIndex = Math.floor(Math.random() * photos.length);
+                const photoId = photos[randomIndex].file_id;
+
+                // Получаем URL фотографии
+                const fileResponse = await fetch(`https://api.telegram.org/bot7989890906:AAGhTKKfRiNG_HEmyRX8Z6KdMLo0CndS50E/getFile?file_id=${photoId}`);
+                const fileData = await fileResponse.json();
+                const imageUrl = `https://api.telegram.org/file/bot7989890906:AAGhTKKfRiNG_HEmyRX8Z6KdMLo0CndS50E/${fileData.result.file_path}`;
+
+                const imgElement = document.getElementById('randomImage');
+                imgElement.src = imageUrl;
+                imgElement.style.display = 'block';
+            } else {
+                alert('Нет доступных фотографий.');
+            }
+        };
+    </script>
+</body>
+</html>
