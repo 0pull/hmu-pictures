@@ -31,13 +31,14 @@
             margin-top: 20px;
             max-width: 100%;
             height: auto;
+            display: none; /* Скрываем изображение по умолчанию */
         }
     </style>
 </head>
 <body>
     <h1>Случайные картинки из Telegram</h1>
     <button id="randomImageButton">Получить случайную картинку</button>
-    <img id="randomImage" src="" alt="Случайная картинка" style="display:none;">
+    <img id="randomImage" alt="Случайная картинка">
 
     <script>
         document.getElementById('randomImageButton').onclick = async function() {
@@ -58,7 +59,7 @@
 
                 const imgElement = document.getElementById('randomImage');
                 imgElement.src = imageUrl;
-                imgElement.style.display = 'block';
+                imgElement.style.display = 'block'; // Показываем изображение
             } else {
                 alert('Нет доступных фотографий.');
             }
